@@ -15,58 +15,142 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
+            border-radius: 15px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            padding: 30px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px;
+                border-radius: 10px;
+            }
         }
 
         h1 {
             text-align: center;
             color: #333;
-            margin-bottom: 30px;
-            font-size: 2.5em;
+            margin-bottom: 25px;
+            font-size: 2.2em;
             font-weight: 300;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+        }
+
+        .preset-section {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .preset-section select {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.3s;
+        }
+
+        .preset-section select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .preset-section button {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+
+        .preset-section button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .preset-section {
+                gap: 5px;
+                margin-bottom: 15px;
+            }
+            .preset-section select {
+                padding: 8px;
+                font-size: 14px;
+            }
+            .preset-section button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
         }
 
         .add-section {
             display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
+            gap: 8px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
         }
 
         .add-section input {
             flex: 1;
-            min-width: 200px;
-            padding: 12px;
+            min-width: 150px;
+            padding: 10px;
             border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 14px;
             transition: border-color 0.3s;
         }
 
-        .add-section input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
         .add-section button {
-            padding: 12px 24px;
+            padding: 10px 20px;
             background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             transition: transform 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .add-section {
+                gap: 5px;
+                margin-bottom: 20px;
+            }
+            .add-section input {
+                min-width: 120px;
+                padding: 8px;
+                font-size: 14px;
+            }
+            .add-section button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
         }
 
         .add-section button:hover {
@@ -74,21 +158,38 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
+        .add-section input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
         .sections {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .section {
             background: white;
             border: 2px solid #eee;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             transition: all 0.3s;
             position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .sections {
+                margin-bottom: 20px;
+            }
+            .section {
+                padding: 12px;
+                margin-bottom: 8px;
+                gap: 8px;
+                border-radius: 8px;
+            }
         }
 
         .section.active {
@@ -108,16 +209,34 @@
         }
 
         .section-name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             color: #333;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .section-time {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             color: #667eea;
+        }
+
+        .section.active .section-time {
+            font-size: 24px;
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .section-name {
+                font-size: 14px;
+                margin-bottom: 2px;
+            }
+            .section-time {
+                font-size: 18px;
+            }
+            .section.active .section-time {
+                font-size: 20px;
+            }
         }
 
         .section-time.overtime {
@@ -130,11 +249,6 @@
             51%, 100% { opacity: 0.5; }
         }
 
-        .section.active .section-time {
-            font-size: 32px;
-            animation: pulse 2s infinite;
-        }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
@@ -142,19 +256,34 @@
 
         .section-controls {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             align-items: center;
+            flex-shrink: 0;
+        }
+
+        .lock-btn, .delete-btn {
+            border: none;
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        @media (max-width: 768px) {
+            .section-controls {
+                gap: 4px;
+            }
+            .lock-btn, .delete-btn {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
         }
 
         .lock-btn {
             background: #ffd700;
             color: #333;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
         }
 
         .lock-btn.locked {
@@ -165,12 +294,6 @@
         .delete-btn {
             background: #ff6b6b;
             color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
         }
 
         .delete-btn:hover, .lock-btn:hover {
@@ -179,18 +302,30 @@
 
         .timer-controls {
             text-align: center;
-            margin: 30px 0;
+            margin: 25px 0;
         }
 
         .control-btn {
-            padding: 15px 30px;
-            margin: 0 10px;
+            padding: 12px 24px;
+            margin: 0 8px 8px 8px;
             border: none;
-            border-radius: 15px;
-            font-size: 18px;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .timer-controls {
+                margin: 20px 0;
+            }
+            .control-btn {
+                padding: 10px 16px;
+                margin: 0 4px 6px 4px;
+                font-size: 14px;
+                border-radius: 8px;
+            }
         }
 
         .start-btn {
@@ -225,22 +360,66 @@
         }
 
         .total-time {
-            text-align: center;
-            font-size: 20px;
-            color: #666;
+            position: relative;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 0;
             margin-top: 20px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.7);
+            height: 60px;
+            border: 2px solid #e9ecef;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #a8b8ff, #b8a8ff);
+            transition: width 0.3s ease;
             border-radius: 10px;
+            opacity: 0.7;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+        }
+
+        @media (max-width: 768px) {
+            .total-time {
+                height: 50px;
+                margin-top: 15px;
+                border-radius: 8px;
+            }
+            .progress-text {
+                font-size: 16px;
+            }
         }
 
         .status {
             text-align: center;
-            font-size: 18px;
-            margin: 20px 0;
-            padding: 15px;
-            border-radius: 10px;
+            font-size: 16px;
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 8px;
             font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .status {
+                font-size: 14px;
+                margin: 10px 0;
+                padding: 8px;
+            }
         }
 
         .status.running {
@@ -256,11 +435,20 @@
         .empty-state {
             text-align: center;
             color: #666;
-            font-size: 18px;
-            padding: 40px;
+            font-size: 16px;
+            padding: 30px;
             border: 2px dashed #ddd;
-            border-radius: 15px;
-            margin: 20px 0;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 768px) {
+            .empty-state {
+                font-size: 14px;
+                padding: 20px;
+                border-radius: 8px;
+                margin: 10px 0;
+            }
         }
     </style>
 </head>
@@ -268,6 +456,14 @@
     <div class="container">
         <h1>Lesson Plan Timer</h1>
         
+        <div class="preset-section">
+            <select id="presetSelect" onchange="loadPreset()">
+                <option value="">Select a preset lesson plan...</option>
+                <option value="imporatance-of-scripture-memory">The Imporatance of Scripture Memory (50 min)</option>
+            </select>
+            <button onclick="clearAll()">Clear All</button>
+        </div>
+
         <div class="add-section">
             <input type="text" id="sectionName" placeholder="Section name (e.g., Introduction)" />
             <input type="number" id="sectionMinutes" placeholder="Minutes" min="1" />
@@ -289,7 +485,10 @@
             <button class="control-btn reset-btn" onclick="resetTimer()">Reset</button>
         </div>
 
-        <div class="total-time" id="totalTime">Total Time: 0 minutes</div>
+        <div class="total-time" id="totalTime">
+            <div class="progress-bar" id="progressBar"></div>
+            <div class="progress-text" id="progressText">Total Time: 0 minutes</div>
+        </div>
     </div>
 
     <script>
@@ -297,6 +496,63 @@
         let currentSectionIndex = -1;
         let isRunning = false;
         let timer = null;
+
+        // Preset lesson plans
+        const presets = {
+            'imporatance-of-scripture-memory': [
+                { name: 'Introduction', minutes: 2 },
+                { name: 'Why Should I Memorize Scripture?', minutes: 7 },
+                { name: 'Introduction', minutes: 6 },
+                { name: 'Presentation', minutes: 5 },
+                { name: 'Explanation', minutes: 5 },
+                { name: 'Application', minutes: 6 },
+                { name: 'Repitition', minutes: 3 },
+                { name: 'Review the Verse', minutes: 1 },
+                { name: 'Verse Token Reminders', minutes: 1 },
+                { name: 'Demonstration', minutes: 12 },
+                { name: 'Assignment', minutes: 1 },
+                { name: 'Conclusion', minutes: 1 }
+            ]
+        };
+
+        function loadPreset() {
+            const selectedPreset = document.getElementById('presetSelect').value;
+            if (!selectedPreset || !presets[selectedPreset]) return;
+
+            if (sections.length > 0) {
+                if (!confirm('This will replace your current lesson plan. Continue?')) {
+                    document.getElementById('presetSelect').value = '';
+                    return;
+                }
+            }
+
+            sections = presets[selectedPreset].map(section => ({
+                name: section.name,
+                originalMinutes: section.minutes,
+                remainingSeconds: section.minutes * 60,
+                locked: false,
+                completed: false
+            }));
+
+            renderSections();
+            updateTotalTime();
+            document.getElementById('presetSelect').value = '';
+        }
+
+        function clearAll() {
+            if (isRunning) {
+                alert('Cannot clear while timer is running');
+                return;
+            }
+
+            if (sections.length === 0) return;
+
+            if (confirm('Clear all sections?')) {
+                sections = [];
+                renderSections();
+                updateTotalTime();
+            }
+        }
 
         function addSection() {
             const name = document.getElementById('sectionName').value.trim();
@@ -391,6 +647,7 @@
                 // Only auto-advance if user manually clicks "Next"
                 
                 renderSections();
+                updateTotalTime();
             }, 1000);
         }
 
@@ -508,7 +765,17 @@
 
         function updateTotalTime() {
             const total = sections.reduce((sum, section) => sum + section.originalMinutes, 0);
-            document.getElementById('totalTime').textContent = `Total Time: ${total} minutes`;
+            // Only count remaining time from incomplete sections
+            const remaining = sections
+                .filter(section => !section.completed)
+                .reduce((sum, section) => sum + Math.max(0, section.remainingSeconds), 0);
+            
+            const totalSeconds = total * 60;
+            const elapsed = totalSeconds - remaining;
+            const progress = total > 0 ? Math.max(0, Math.min(100, (elapsed / totalSeconds) * 100)) : 0;
+
+            document.getElementById('progressText').textContent = `${total} minutes total`;
+            document.getElementById('progressBar').style.width = `${progress}%`;
         }
 
         function formatTime(seconds) {

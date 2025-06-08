@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Plan Timer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .add-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .add-section input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .add-section input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .add-section button {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .add-section button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .sections {
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .section.active {
+            border-color: #667eea;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            transform: scale(1.02);
+        }
+
+        .section.completed {
+            opacity: 0.6;
+            background: #f0f8f0;
+            border-color: #4caf50;
+        }
+
+        .section-info {
+            flex: 1;
+        }
+
+        .section-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .section-time {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .section-time.overtime {
+            color: #ff6b6b;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.5; }
+        }
+
+        .section.active .section-time {
+            font-size: 32px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .section-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .lock-btn {
+            background: #ffd700;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .lock-btn.locked {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover, .lock-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .timer-controls {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .control-btn {
+            padding: 15px 30px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #4caf50, #45a049);
+            color: white;
+        }
+
+        .pause-btn {
+            background: linear-gradient(45deg, #ff9800, #f57c00);
+            color: white;
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #2196f3, #1976d2);
+            color: white;
+        }
+
+        .reset-btn {
+            background: linear-gradient(45deg, #f44336, #d32f2f);
+            color: white;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .total-time {
+            text-align: center;
+            font-size: 20px;
+            color: #666;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+        }
+
+        .status {
+            text-align: center;
+            font-size: 18px;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .status.running {
+            background: linear-gradient(45deg, rgba(76, 175, 80, 0.2), rgba(69, 160, 73, 0.2));
+            color: #2e7d32;
+        }
+
+        .status.paused {
+            background: linear-gradient(45deg, rgba(255, 152, 0, 0.2), rgba(245, 124, 0, 0.2));
+            color: #e65100;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            padding: 40px;
+            border: 2px dashed #ddd;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lesson Plan Timer</h1>
+        
+        <div class="add-section">
+            <input type="text" id="sectionName" placeholder="Section name (e.g., Introduction)" />
+            <input type="number" id="sectionMinutes" placeholder="Minutes" min="1" />
+            <button onclick="addSection()">Add Section</button>
+        </div>
+
+        <div id="status" class="status" style="display: none;"></div>
+
+        <div class="sections" id="sections">
+            <div class="empty-state">
+                Add sections to get started with your lesson plan timer
+            </div>
+        </div>
+
+        <div class="timer-controls">
+            <button class="control-btn start-btn" id="startBtn" onclick="startTimer()">Start</button>
+            <button class="control-btn pause-btn" id="pauseBtn" onclick="pauseTimer()" style="display: none;">Pause</button>
+            <button class="control-btn next-btn" id="nextBtn" onclick="nextSection()" disabled>Next Section</button>
+            <button class="control-btn reset-btn" onclick="resetTimer()">Reset</button>
+        </div>
+
+        <div class="total-time" id="totalTime">Total Time: 0 minutes</div>
+    </div>
+
+    <script>
+        let sections = [];
+        let currentSectionIndex = -1;
+        let isRunning = false;
+        let timer = null;
+
+        function addSection() {
+            const name = document.getElementById('sectionName').value.trim();
+            const minutes = parseInt(document.getElementById('sectionMinutes').value);
+
+            if (!name || !minutes || minutes <= 0) {
+                alert('Please enter a valid section name and time');
+                return;
+            }
+
+            sections.push({
+                name: name,
+                originalMinutes: minutes,
+                remainingSeconds: minutes * 60,
+                locked: false,
+                completed: false
+            });
+
+            document.getElementById('sectionName').value = '';
+            document.getElementById('sectionMinutes').value = '';
+
+            renderSections();
+            updateTotalTime();
+        }
+
+        function renderSections() {
+            const container = document.getElementById('sections');
+            
+            if (sections.length === 0) {
+                container.innerHTML = '<div class="empty-state">Add sections to get started with your lesson plan timer</div>';
+                return;
+            }
+
+            container.innerHTML = sections.map((section, index) => `
+                <div class="section ${index === currentSectionIndex ? 'active' : ''} ${section.completed ? 'completed' : ''}">
+                    <div class="section-info">
+                        <div class="section-name">${section.name}</div>
+                        <div class="section-time ${section.remainingSeconds < 0 ? 'overtime' : ''}">${formatTime(section.remainingSeconds)}</div>
+                    </div>
+                    <div class="section-controls">
+                        <button class="lock-btn ${section.locked ? 'locked' : ''}" onclick="toggleLock(${index})">
+                            ${section.locked ? 'Locked' : 'Lock'}
+                        </button>
+                        <button class="delete-btn" onclick="deleteSection(${index})" ${isRunning ? 'disabled' : ''}>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleLock(index) {
+            if (isRunning) return;
+            sections[index].locked = !sections[index].locked;
+            renderSections();
+        }
+
+        function deleteSection(index) {
+            if (isRunning) return;
+            sections.splice(index, 1);
+            renderSections();
+            updateTotalTime();
+        }
+
+        function startTimer() {
+            if (sections.length === 0) {
+                alert('Please add at least one section');
+                return;
+            }
+
+            if (currentSectionIndex === -1) {
+                currentSectionIndex = 0;
+            }
+
+            isRunning = true;
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('pauseBtn').style.display = 'inline-block';
+            document.getElementById('nextBtn').disabled = false;
+            
+            updateStatus('running');
+            
+            timer = setInterval(() => {
+                if (currentSectionIndex >= sections.length) {
+                    completeTimer();
+                    return;
+                }
+
+                const currentSection = sections[currentSectionIndex];
+                currentSection.remainingSeconds--;
+
+                // Allow sections to go into overtime (negative time)
+                // Only auto-advance if user manually clicks "Next"
+                
+                renderSections();
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            isRunning = false;
+            clearInterval(timer);
+            
+            document.getElementById('startBtn').style.display = 'inline-block';
+            document.getElementById('pauseBtn').style.display = 'none';
+            
+            updateStatus('paused');
+        }
+
+        function nextSection() {
+            if (currentSectionIndex >= sections.length - 1) return;
+
+            const currentSection = sections[currentSectionIndex];
+            const remainingTime = currentSection.remainingSeconds;
+
+            // If section went overtime (negative), redistribute that deficit
+            if (remainingTime < 0) {
+                redistributeDeficit(Math.abs(remainingTime));
+            } else if (remainingTime > 0) {
+                // If section finished early, redistribute remaining time
+                redistributeTime(remainingTime);
+            }
+
+            currentSection.completed = true;
+            currentSectionIndex++;
+
+            renderSections();
+        }
+
+        function redistributeDeficit(deficitSeconds) {
+            const unlockedSections = sections.slice(currentSectionIndex + 1).filter(s => !s.locked && !s.completed);
+            
+            if (unlockedSections.length === 0) return;
+
+            const timePerSection = Math.floor(deficitSeconds / unlockedSections.length);
+            let remainder = deficitSeconds % unlockedSections.length;
+
+            unlockedSections.forEach((section, index) => {
+                section.remainingSeconds -= timePerSection;
+                if (index < remainder) {
+                    section.remainingSeconds -= 1;
+                }
+                // Ensure sections don't go below 0 when redistributing deficit
+                if (section.remainingSeconds < 0) {
+                    section.remainingSeconds = 0;
+                }
+            });
+        }
+
+        function redistributeTime(extraSeconds) {
+            const unlockedSections = sections.slice(currentSectionIndex + 1).filter(s => !s.locked && !s.completed);
+            
+            if (unlockedSections.length === 0) return;
+
+            const timePerSection = Math.floor(extraSeconds / unlockedSections.length);
+            let remainder = extraSeconds % unlockedSections.length;
+
+            unlockedSections.forEach((section, index) => {
+                section.remainingSeconds += timePerSection;
+                if (index < remainder) {
+                    section.remainingSeconds += 1;
+                }
+            });
+        }
+
+        function resetTimer() {
+            isRunning = false;
+            clearInterval(timer);
+            currentSectionIndex = -1;
+
+            sections.forEach(section => {
+                section.remainingSeconds = section.originalMinutes * 60;
+                section.completed = false;
+            });
+
+            document.getElementById('startBtn').style.display = 'inline-block';
+            document.getElementById('pauseBtn').style.display = 'none';
+            document.getElementById('nextBtn').disabled = true;
+
+            updateStatus('');
+            renderSections();
+        }
+
+        function completeTimer() {
+            isRunning = false;
+            clearInterval(timer);
+            
+            document.getElementById('startBtn').style.display = 'inline-block';
+            document.getElementById('pauseBtn').style.display = 'none';
+            document.getElementById('nextBtn').disabled = true;
+
+            updateStatus('');
+            alert('Lesson plan completed!');
+        }
+
+        function updateStatus(status) {
+            const statusEl = document.getElementById('status');
+            
+            if (status === 'running') {
+                statusEl.textContent = '⏱️ Timer Running';
+                statusEl.className = 'status running';
+                statusEl.style.display = 'block';
+            } else if (status === 'paused') {
+                statusEl.textContent = '⏸️ Timer Paused';
+                statusEl.className = 'status paused';
+                statusEl.style.display = 'block';
+            } else {
+                statusEl.style.display = 'none';
+            }
+        }
+
+        function updateTotalTime() {
+            const total = sections.reduce((sum, section) => sum + section.originalMinutes, 0);
+            document.getElementById('totalTime').textContent = `Total Time: ${total} minutes`;
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(Math.abs(seconds) / 60);
+            const secs = Math.abs(seconds) % 60;
+            const sign = seconds < 0 ? '-' : '';
+            return `${sign}${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Add some sample sections for demonstration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Uncomment these lines to start with sample data
+            // sections = [
+            //     { name: 'Introduction', originalMinutes: 2, remainingSeconds: 120, locked: false, completed: false },
+            //     { name: 'Demonstration', originalMinutes: 12, remainingSeconds: 720, locked: false, completed: false },
+            //     { name: 'Practice', originalMinutes: 15, remainingSeconds: 900, locked: false, completed: false },
+            //     { name: 'Q&A', originalMinutes: 5, remainingSeconds: 300, locked: false, completed: false }
+            // ];
+            // renderSections();
+            // updateTotalTime();
+        });
+    </script>
+</body>
+</html>

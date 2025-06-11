@@ -459,8 +459,8 @@
         <div class="preset-section">
             <select id="presetSelect" onchange="loadPreset()">
                 <option value="">Select a preset lesson plan...</option>
-                <option value="imporatance-of-scripture-memory">The Imporatance of Scripture Memory (50 min)</option>
-                <option value="putting-the-pieces-together">Putting the Pieces Together (50 min)</option>
+                <option value="importance-of-scripture-memory">The Importance of Scripture Memory (50 min)</option>
+                <option value="putting-the-pieces-together">Putting the Pieces Together (49 min)</option>
             </select>
             <button onclick="clearAll()">Clear All</button>
         </div>
@@ -500,14 +500,14 @@
 
         // Preset lesson plans
         const presets = {
-            'imporatance-of-scripture-memory': [
+            'importance-of-scripture-memory': [
                 { name: 'Introduction', minutes: 2 },
                 { name: 'Why Should I Memorize Scripture?', minutes: 7 },
                 { name: 'Introduction', minutes: 6 },
                 { name: 'Presentation', minutes: 5 },
                 { name: 'Explanation', minutes: 5 },
                 { name: 'Application', minutes: 6 },
-                { name: 'Repitition', minutes: 3 },
+                { name: 'Repetition', minutes: 3 },
                 { name: 'Review the Verse', minutes: 1 },
                 { name: 'Verse Token Reminders', minutes: 1 },
                 { name: 'Demonstration', minutes: 12 },
@@ -516,12 +516,12 @@
             ],
             'putting-the-pieces-together': [
                 { name: 'Introduction', minutes: 3 },
-                { name: Before Club', minutes: 23 },
+                { name: 'Before Club', minutes: 23 },
                 { name: 'Day of Club', minutes: 10 },
                 { name: 'After Club', minutes: 1 },
                 { name: 'Record Keeping', minutes: 10 },
                 { name: 'Media Policy', minutes: 1 },
-                { name: 'Conclusion', minutes: 1 },
+                { name: 'Conclusion', minutes: 1 }
             ]
         };
 

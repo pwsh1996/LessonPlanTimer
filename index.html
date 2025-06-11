@@ -261,6 +261,33 @@
             flex-shrink: 0;
         }
 
+        .drag-handle {
+            cursor: grab;
+            padding: 8px 4px;
+            color: #999;
+            font-size: 18px;
+            user-select: none;
+            transition: color 0.2s;
+        }
+
+        .drag-handle:hover {
+            color: #667eea;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .section.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .section.drag-over {
+            border-color: #667eea;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+
         .lock-btn, .delete-btn {
             border: none;
             border-radius: 6px;
@@ -597,12 +624,21 @@
             }
 
             container.innerHTML = sections.map((section, index) => `
-                <div class="section ${index === currentSectionIndex ? 'active' : ''} ${section.completed ? 'completed' : ''}">
+                <div class="section ${index === currentSectionIndex ? 'active' : ''} ${section.completed ? 'completed' : ''}" 
+                     draggable="true" 
+                     data-index="${index}"
+                     ondragstart="handleDragStart(event, ${index})"
+                     ondragover="handleDragOver(event)"
+                     ondrop="handleDrop(event, ${index})"
+                     ondragend="handleDragEnd(event)"
+                     ondragenter="handleDragEnter(event)"
+                     ondragleave="handleDragLeave(event)">
                     <div class="section-info">
                         <div class="section-name">${section.name}</div>
                         <div class="section-time ${section.remainingSeconds < 0 ? 'overtime' : ''}">${formatTime(section.remainingSeconds)}</div>
                     </div>
                     <div class="section-controls">
+                        <div class="drag-handle" title="Drag to reorder">⋮⋮</div>
                         <button class="lock-btn ${section.locked ? 'locked' : ''}" onclick="toggleLock(${index})">
                             ${section.locked ? 'Locked' : 'Lock'}
                         </button>
@@ -793,6 +829,75 @@
             const secs = Math.abs(seconds) % 60;
             const sign = seconds < 0 ? '-' : '';
             return `${sign}${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Drag and drop functionality
+        let draggedIndex = null;
+
+        function handleDragStart(event, index) {
+            if (isRunning) {
+                event.preventDefault();
+                return;
+            }
+            
+            draggedIndex = index;
+            event.target.classList.add('dragging');
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/html', event.target.outerHTML);
+        }
+
+        function handleDragOver(event) {
+            if (isRunning) return;
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDragEnter(event) {
+            if (isRunning) return;
+            event.preventDefault();
+            event.target.closest('.section')?.classList.add('drag-over');
+        }
+
+        function handleDragLeave(event) {
+            if (isRunning) return;
+            event.target.closest('.section')?.classList.remove('drag-over');
+        }
+
+        function handleDrop(event, dropIndex) {
+            if (isRunning) return;
+            event.preventDefault();
+            
+            const dropTarget = event.target.closest('.section');
+            if (dropTarget) {
+                dropTarget.classList.remove('drag-over');
+            }
+            
+            if (draggedIndex !== null && draggedIndex !== dropIndex) {
+                // Move the section
+                const draggedSection = sections[draggedIndex];
+                sections.splice(draggedIndex, 1);
+                sections.splice(dropIndex, 0, draggedSection);
+                
+                // Update current section index if needed
+                if (currentSectionIndex === draggedIndex) {
+                    currentSectionIndex = dropIndex;
+                } else if (currentSectionIndex > draggedIndex && currentSectionIndex <= dropIndex) {
+                    currentSectionIndex--;
+                } else if (currentSectionIndex < draggedIndex && currentSectionIndex >= dropIndex) {
+                    currentSectionIndex++;
+                }
+                
+                renderSections();
+            }
+        }
+
+        function handleDragEnd(event) {
+            event.target.classList.remove('dragging');
+            // Clean up any remaining drag-over classes
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('drag-over');
+            });
+            draggedIndex = null;
         }
 
         // Add some sample sections for demonstration
